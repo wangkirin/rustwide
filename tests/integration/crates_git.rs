@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use rustwide::cmd::{Command, CommandError, SandboxBuilder};
 use rustwide::{Crate, PrepareError, Toolchain, Workspace};
 

@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use rustwide::{AlternativeRegistry, Crate};
 
 const INDEX_URL: &str = "https://github.com/rust-lang/staging.crates.io-index";

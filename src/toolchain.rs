@@ -5,26 +5,27 @@ use crate::tools::RUSTUP;
 #[cfg(feature = "unstable-toolchain-ci")]
 use crate::tools::RUSTUP_TOOLCHAIN_INSTALL_MASTER;
 use crate::Workspace;
-use failure::{Error, ResultExt};
+use anyhow::{anyhow, Context, Error, Result};
 use log::info;
 use std::borrow::Cow;
 use std::path::Path;
+use thiserror::Error as ThisError;
 
 pub(crate) const MAIN_TOOLCHAIN_NAME: &str = "stable";
 
 /// Error caused by methods in the `toolchain` moodule.
-#[derive(Debug, failure::Fail)]
+#[derive(Debug, ThisError)]
 #[non_exhaustive]
 pub enum ToolchainError {
     /// The toolchain is not installed in the workspace, but the called method requires it to be
     /// present.  Use the [`Toolchain::Install`](struct.Toolchain.html#method.install) method to
     /// install it inside the workspace.
-    #[fail(display = "the toolchain is not installed")]
+    #[error("the toolchain is not installed")]
     NotInstalled,
     /// Not every method can be called with every kind of toolchain. If you receive this error
     /// please check the documentation of the method you're calling to see which toolchains can you
     /// use with it.
-    #[fail(display = "unsupported operation on this toolchain")]
+    #[error("unsupported operation on this toolchain")]
     UnsupportedOperation,
 }
 
@@ -51,7 +52,7 @@ impl DistToolchain {
                 workspace.rustup_profile(),
             ])
             .run()
-            .with_context(|_| format!("unable to install toolchain {} via rustup", self.name()))?;
+            .with_context(|| format!("unable to install toolchain {} via rustup", self.name()))?;
 
         Ok(())
     }
@@ -321,7 +322,7 @@ impl Toolchain {
         #[cfg(feature = "unstable-toolchain-ci")]
         if let ToolchainInner::CI(ci) = &self.inner {
             if let RustupAction::Remove = action {
-                failure::bail!("removing {thing} on CI toolchains is not supported yet");
+                bail!("removing {thing} on CI toolchains is not supported yet");
             }
 
             let mut args = Vec::with_capacity(6);
@@ -367,7 +368,7 @@ impl Toolchain {
                 name,
             ])
             .run()
-            .with_context(|_| {
+            .with_context(|| {
                 format!(
                     "unable to {log_action} {thing} {name} for toolchain {toolchain_name} via rustup"
                 )
@@ -421,7 +422,7 @@ impl Toolchain {
         Command::new(workspace, &RUSTUP)
             .args(&["toolchain", "uninstall", &name])
             .run()
-            .with_context(|_| format!("unable to uninstall toolchain {} via rustup", name))?;
+            .with_context(|| format!("unable to uninstall toolchain {} via rustup", name))?;
         Ok(())
     }
 
@@ -531,7 +532,7 @@ pub(crate) fn list_installed_toolchains(rustup_home: &Path) -> Result<Vec<Toolch
         let name = entry
             .file_name()
             .to_str()
-            .ok_or_else(|| failure::err_msg("non-utf8 toolchain name"))?
+            .ok_or_else(|| anyhow!("non-utf8 toolchain name"))?
             .to_string();
         // A toolchain installed by rustup has a corresponding file in $RUSTUP_HOME/update-hashes
         // A toolchain linked by rustup is just a symlink
@@ -555,7 +556,7 @@ pub(crate) fn list_installed_toolchains(rustup_home: &Path) -> Result<Vec<Toolch
 #[cfg(test)]
 mod tests {
     use super::Toolchain;
-    use failure::Error;
+    use anyhow::Error;
 
     #[test]
     fn test_dist_serde_repr() -> Result<(), Error> {

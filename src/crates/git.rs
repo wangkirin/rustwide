@@ -2,7 +2,7 @@ use super::CrateTrait;
 use crate::cmd::{Command, ProcessLinesActions};
 use crate::prepare::PrepareError;
 use crate::Workspace;
-use failure::{Error, ResultExt};
+use anyhow::{Context, Error, Result};
 use log::{info, warn};
 use std::path::{Path, PathBuf};
 
@@ -86,7 +86,7 @@ impl CrateTrait for GitRepo {
                 .cd(&path)
                 .process_lines(&mut detect_private_repositories)
                 .run()
-                .with_context(|_| format!("failed to update {}", self.url))
+                .with_context(|| format!("failed to update {}", self.url))
         } else {
             info!("cloning repository {}", self.url);
             Command::new(workspace, "git")
@@ -95,7 +95,7 @@ impl CrateTrait for GitRepo {
                 .args(&[&path])
                 .process_lines(&mut detect_private_repositories)
                 .run()
-                .with_context(|_| format!("failed to clone {}", self.url))
+                .with_context(|| format!("failed to clone {}", self.url))
         };
 
         if private_repository && res.is_err() {
@@ -118,7 +118,7 @@ impl CrateTrait for GitRepo {
             .args(&["clone"])
             .args(&[self.cached_path(workspace).as_path(), dest])
             .run()
-            .with_context(|_| format!("failed to checkout {}", self.url))?;
+            .with_context(|| format!("failed to checkout {}", self.url))?;
         Ok(())
     }
 }

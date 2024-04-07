@@ -2,7 +2,7 @@ use crate::build::BuildDirectory;
 use crate::cmd::{Command, SandboxImage};
 use crate::inside_docker::CurrentContainer;
 use crate::Toolchain;
-use failure::{Error, ResultExt};
+use anyhow::{Context, Error, Result};
 use log::info;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -135,7 +135,7 @@ impl WorkspaceBuilder {
     /// Initialize the workspace. This will create all the necessary local files and fetch the rest from the network. It's
     /// not unexpected for this method to take minutes to run on slower network connections.
     pub fn init(self) -> Result<Workspace, Error> {
-        std::fs::create_dir_all(&self.path).with_context(|_| {
+        std::fs::create_dir_all(&self.path).with_context(|| {
             format!(
                 "failed to create workspace directory: {}",
                 self.path.display()

@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use rustwide::cmd::Command;
 use std::fs;
 

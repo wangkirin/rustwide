@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use rustwide::cmd::SandboxBuilder;
 use rustwide::{Crate, Toolchain};
 use std::collections::HashMap;

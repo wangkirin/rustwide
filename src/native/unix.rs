@@ -1,6 +1,6 @@
 use super::CurrentUser;
 use crate::cmd::KillFailedError;
-use failure::Error;
+use anyhow::Error;
 use nix::{
     sys::signal::{kill, Signal},
     unistd::{Gid, Pid, Uid},

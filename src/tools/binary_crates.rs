@@ -1,7 +1,7 @@
 use crate::cmd::{Binary, Command, Runnable};
 use crate::tools::Tool;
 use crate::{Toolchain, Workspace};
-use failure::Error;
+use anyhow::Error;
 use std::path::PathBuf;
 
 pub(crate) struct BinaryCrate {

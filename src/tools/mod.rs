@@ -2,8 +2,8 @@ mod binary_crates;
 mod rustup;
 
 use crate::workspace::Workspace;
+use anyhow::{bail, Error};
 use binary_crates::BinaryCrate;
-use failure::{bail, Error};
 use log::info;
 use rustup::Rustup;
 use std::env::consts::EXE_SUFFIX;

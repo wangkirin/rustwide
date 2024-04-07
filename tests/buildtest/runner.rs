@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use rand::{distributions::Alphanumeric, Rng};
 use rustwide::{cmd::SandboxBuilder, Build, BuildBuilder, Crate, Toolchain, Workspace};
 use std::path::Path;

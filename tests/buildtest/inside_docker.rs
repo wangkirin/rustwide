@@ -1,6 +1,6 @@
 #![cfg_attr(windows, allow(unused))]
 
-use failure::{Error, ResultExt};
+use anyhow::{Error, Result};
 use std::io::Write;
 use std::path::Path;
 use std::process::Command;

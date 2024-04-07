@@ -1,6 +1,6 @@
 use super::CurrentUser;
 use crate::cmd::KillFailedError;
-use failure::Error;
+use anyhow::Error;
 use std::fs::File;
 use std::path::Path;
 use windows_sys::Win32::Foundation::CloseHandle;

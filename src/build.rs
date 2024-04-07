@@ -1,7 +1,7 @@
 use crate::cmd::{Command, MountKind, Runnable, SandboxBuilder};
 use crate::prepare::Prepare;
 use crate::{Crate, Toolchain, Workspace};
-use failure::Error;
+use anyhow::Error;
 use std::path::PathBuf;
 use std::vec::Vec;
 

@@ -1,6 +1,6 @@
 use super::CrateTrait;
 use crate::Workspace;
-use failure::Error;
+use anyhow::Error;
 use log::info;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
@@ -75,7 +75,7 @@ fn copy_dir(src: &Path, dest: &Path) -> Result<(), Error> {
 
 #[cfg(test)]
 mod tests {
-    use failure::Error;
+    use anyhow::Error;
 
     #[test]
     fn test_copy_dir() -> Result<(), Error> {

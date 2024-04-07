@@ -1,8 +1,9 @@
 use crate::cmd::Command;
 use crate::{build::CratePatch, Crate, Toolchain, Workspace};
-use failure::{Error, Fail, ResultExt};
+use anyhow::{Context, Error, Result};
 use log::info;
 use std::path::Path;
+use thiserror::Error as ThisError;
 use toml::{
     value::{Array, Table},
     Value,
@@ -189,9 +190,9 @@ impl<'a> TomlTweaker<'a> {
         patches: &[CratePatch],
     ) -> Result<Self, Error> {
         let toml_content = ::std::fs::read_to_string(cargo_toml)
-            .with_context(|_| PrepareError::MissingCargoToml)?;
+            .with_context(|| PrepareError::MissingCargoToml)?;
         let table: Table =
-            toml::from_str(&toml_content).with_context(|_| PrepareError::InvalidCargoTomlSyntax)?;
+            toml::from_str(&toml_content).with_context(|| PrepareError::InvalidCargoTomlSyntax)?;
 
         let dir = cargo_toml.parent();
 
@@ -367,24 +368,24 @@ impl<'a> TomlTweaker<'a> {
 }
 
 /// Error happened while preparing a crate for a build.
-#[derive(Debug, Fail)]
+#[derive(Debug, ThisError)]
 #[non_exhaustive]
 pub enum PrepareError {
     /// The git repository isn't publicly available.
-    #[fail(display = "can't fetch private git repositories")]
+    #[error("can't fetch private git repositories")]
     PrivateGitRepository,
     /// The crate doesn't have a `Cargo.toml` in its source code.
-    #[fail(display = "missing Cargo.toml")]
+    #[error("missing Cargo.toml")]
     MissingCargoToml,
     /// The crate's Cargo.toml is invalid, either due to a TOML syntax error in it or cargo
     /// rejecting it.
-    #[fail(display = "invalid Cargo.toml syntax")]
+    #[error("invalid Cargo.toml syntax")]
     InvalidCargoTomlSyntax,
     /// Some of this crate's dependencies were yanked, preventing Crater from fetching them.
-    #[fail(display = "the crate depends on yanked dependencies")]
+    #[error("the crate depends on yanked dependencies")]
     YankedDependencies,
     /// Some of the dependencies do not exist anymore.
-    #[fail(display = "the crate depends on missing dependencies")]
+    #[error("the crate depends on missing dependencies")]
     MissingDependencies,
 }
 

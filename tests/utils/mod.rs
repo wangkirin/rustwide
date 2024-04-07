@@ -1,4 +1,4 @@
-use failure::Error;
+use anyhow::Error;
 use log::LevelFilter;
 use rustwide::{cmd::SandboxImage, Workspace, WorkspaceBuilder};
 use std::path::{Path, PathBuf};

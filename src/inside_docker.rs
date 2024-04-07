@@ -1,6 +1,6 @@
 use crate::cmd::Command;
 use crate::workspace::Workspace;
-use failure::Error;
+use anyhow::{bail, Error};
 use getrandom::getrandom;
 use log::info;
 
@@ -22,7 +22,7 @@ impl CurrentContainer {
             let content = inspect.stdout_lines().join("\n");
             let mut metadata: Vec<Metadata> = serde_json::from_str(&content)?;
             if metadata.len() != 1 {
-                failure::bail!("invalid output returned by `docker inspect`");
+                bail!("invalid output returned by `docker inspect`");
             }
             Ok(Some(CurrentContainer {
                 metadata: metadata.pop().unwrap(),
