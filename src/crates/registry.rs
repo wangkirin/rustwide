@@ -194,11 +194,10 @@ impl CrateTrait for RegistryCrate {
         );
         if let Err(err) = unpack_without_first_dir(&mut tar, dest) {
             let _ = crate::utils::remove_dir_all(dest);
-            Err(err
-                .context(format!(
-                    "unable to download {} version {}",
-                    self.name, self.version
-                )))
+            Err(err.context(format!(
+                "unable to download {} version {}",
+                self.name, self.version
+            )))
         } else {
             Ok(())
         }

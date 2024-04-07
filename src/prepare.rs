@@ -394,7 +394,7 @@ mod tests {
     use super::TomlTweaker;
     use crate::build::{CratePatch, GitCratePatch, PathCratePatch};
     use crate::crates::Crate;
-    use toml::{self, Value};
+    use toml::Value;
 
     #[test]
     fn test_tweak_table_noop() {

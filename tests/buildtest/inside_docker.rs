@@ -1,6 +1,6 @@
 #![cfg_attr(windows, allow(unused))]
 
-use anyhow::{Error, Result};
+use anyhow::{Context, Error, Result};
 use std::io::Write;
 use std::path::Path;
 use std::process::Command;
@@ -37,7 +37,7 @@ fn execute(test: &str) -> Result<(), Error> {
     let container_exe = target_prefix.join(
         current_exe
             .strip_prefix(&target_parent_dir)
-            .with_context(|_| "could not determine cargo target dir")?,
+            .with_context(|| "could not determine cargo target dir")?,
     );
     let src_mount = os_string!(&current_dir, ":", &container_prefix);
     let target_mount = os_string!(&target_parent_dir, ":", &target_prefix);
@@ -97,7 +97,7 @@ impl CommandExt for Command {
             std::io::stderr().lock().write_all(&out.stdout)?;
             eprintln!("stderr:");
             std::io::stderr().lock().write_all(&out.stderr)?;
-            failure::bail!("failed to execute command {:?}", self);
+            anyhow::bail!("failed to execute command {:?}", self);
         }
         Ok(())
     }

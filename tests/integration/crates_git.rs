@@ -127,7 +127,7 @@ impl Repo {
 
     fn serve(&self) -> Result<String, Error> {
         let server =
-            tiny_http::Server::http("localhost:0").map_err(|e| failure::err_msg(e.to_string()))?;
+            tiny_http::Server::http("localhost:0").map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let port = server.server_addr().port();
 
         let base = self.source.path().join(".git");
