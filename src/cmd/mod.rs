@@ -14,7 +14,6 @@ use futures_util::{
 };
 use log::{error, info};
 use process_lines_actions::InnerState;
-use std::convert::AsRef;
 use std::env::consts::EXE_SUFFIX;
 use std::ffi::{OsStr, OsString};
 use std::path::{Path, PathBuf};
@@ -439,7 +438,7 @@ impl<'w, 'pl> Command<'w, 'pl> {
                 }
             };
 
-            let mut cmd = AsyncCommand::new(&binary);
+            let mut cmd = AsyncCommand::new(binary);
             cmd.args(&self.args);
 
             if managed_by_rustwide {

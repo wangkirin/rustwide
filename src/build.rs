@@ -3,7 +3,6 @@ use crate::prepare::Prepare;
 use crate::{Crate, Toolchain, Workspace};
 use anyhow::Error;
 use std::path::PathBuf;
-use std::vec::Vec;
 
 #[derive(Clone)]
 pub(crate) enum CratePatch {

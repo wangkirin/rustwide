@@ -30,6 +30,7 @@ pub(crate) fn file_lock<T>(
         .read(true)
         .write(true)
         .create(true)
+        .truncate(true)
         .open(path)?;
 
     let mut message_displayed = false;

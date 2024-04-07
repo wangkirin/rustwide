@@ -5,7 +5,6 @@ use nix::{
     sys::signal::{kill, Signal},
     unistd::{Gid, Pid, Uid},
 };
-use std::convert::AsRef;
 use std::os::unix::fs::{MetadataExt, PermissionsExt};
 use std::path::Path;
 

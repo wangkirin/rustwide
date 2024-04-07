@@ -198,8 +198,7 @@ impl CrateTrait for RegistryCrate {
                 .context(format!(
                     "unable to download {} version {}",
                     self.name, self.version
-                ))
-                .into())
+                )))
         } else {
             Ok(())
         }
